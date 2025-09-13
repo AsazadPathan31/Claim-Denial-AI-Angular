@@ -1,0 +1,102 @@
+<div class="popup-overlay" (click)="onClose()">
+  <div class="popup-modal" (click)="$event.stopPropagation()">
+    <!-- STICKY HEADER -->
+    <div class="popup-header">
+      <h2>Trip Analysis Results</h2>
+      <button class="close-btn" (click)="onClose()" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Risk Indicator (stays with header) -->
+    <div
+      class="risk-indicator"
+      [ngClass]="getRiskClass()"
+      *ngIf="analysis?.risk"
+    >
+      <strong>Risk Level: {{ analysis?.risk | titlecase }}</strong>
+    </div>
+
+    <!-- SCROLLABLE CONTENT AREA -->
+    <div class="popup-content">
+      <!-- Summary Section -->
+      <div class="content-section" *ngIf="analysis?.summary?.length">
+        <h3>Summary</h3>
+        <ul class="summary-list">
+          <li *ngFor="let item of analysis?.summary">{{ item }}</li>
+        </ul>
+      </div>
+
+      <!-- Issues Section -->
+      <div class="content-section" *ngIf="analysis?.issues?.length">
+        <h3>Identified Issues</h3>
+        <div class="issues-container">
+          <div class="issue-card" *ngFor="let issue of analysis?.issues">
+            <div class="issue-header">
+              <span class="issue-code" *ngIf="issue.code">{{
+                issue.code
+              }}</span>
+              <h4 class="issue-title">{{ issue.title || "Issue" }}</h4>
+            </div>
+            <p class="issue-detail" *ngIf="issue.detail">{{ issue.detail }}</p>
+            <p class="issue-evidence" *ngIf="issue.evidence">
+              <strong>Evidence:</strong> {{ issue.evidence }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions Section -->
+      <div class="content-section" *ngIf="analysis?.actions?.length">
+        <h3>Recommended Next Steps</h3>
+        <ol class="actions-list">
+          <li *ngFor="let action of analysis?.actions">{{ action }}</li>
+        </ol>
+      </div>
+
+      <!-- Appeal Draft Section -->
+      <div class="content-section" *ngIf="appealText()">
+        <h3>Draft Appeal/Checklist</h3>
+        <div class="appeal-container">
+          <pre class="appeal-text">{{ appealText() }}</pre>
+          <button class="secondary-btn" (click)="copyAppealText()">
+            📋 Copy to Clipboard
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STICKY FOOTER -->
+    <div class="popup-actions">
+      <button
+        class="primary-btn"
+        (click)="onDraftAppeal()"
+        [disabled]="isLoadingAppeal()"
+      >
+        {{ isLoadingAppeal() ? "Generating..." : "Generate Appeal/Checklist" }}
+      </button>
+
+      <button class="secondary-btn" (click)="onReanalyze(false)">
+        🔄 Re-analyze
+      </button>
+
+      <button class="secondary-btn" (click)="onReanalyze(true)">
+        🧠 Deep Analysis
+      </button>
+
+      <div class="feedback-section">
+        <span>Rate this analysis:</span>
+        <div class="rating-buttons">
+          <button
+            *ngFor="let rating of [1, 2, 3, 4, 5]"
+            class="rating-btn"
+            [class.selected]="feedbackRating === rating"
+            (click)="submitFeedback(rating)"
+          >
+            {{ rating }}⭐
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

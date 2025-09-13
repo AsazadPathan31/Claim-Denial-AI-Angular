@@ -1,0 +1,351 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.popup-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 900px;
+  max-height: 90vh;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+
+  // KEY FIX: Use flexbox layout for sticky header/footer
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// STICKY HEADER - Fixed at top
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px 20px;
+  border-bottom: 2px solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+
+  // FIX: Make header sticky
+  flex-shrink: 0; // Prevent shrinking
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+
+// FIX: Close button positioning
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  position: relative; // Remove any sticky positioning
+  z-index: 11; // Ensure it's above header
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.risk-indicator {
+  padding: 16px 28px;
+  margin: 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0; // Prevent shrinking
+
+  &.risk-low {
+    background: #d4edda;
+    color: #155724;
+    border-left: 5px solid #28a745;
+  }
+
+  &.risk-medium {
+    background: #fff3cd;
+    color: #856404;
+    border-left: 5px solid #ffc107;
+  }
+
+  &.risk-high {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 5px solid #dc3545;
+  }
+}
+
+// SCROLLABLE CONTENT AREA - This is the key fix
+.popup-content {
+  flex: 1; // Take up remaining space
+  overflow-y: auto; // Allow scrolling
+  overflow-x: hidden;
+  padding: 0; // Remove padding, let individual sections handle it
+}
+
+.content-section {
+  padding: 24px 28px;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 32px; // Extra space before footer
+  }
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #2c3e50;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.summary-list {
+  margin: 0;
+  padding-left: 20px;
+
+  li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #34495e;
+  }
+}
+
+.issues-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.issue-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.issue-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.issue-code {
+  background: #e9ecef;
+  color: #495057;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.issue-title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.issue-detail {
+  margin: 8px 0;
+  color: #5a6c7d;
+  line-height: 1.5;
+}
+
+.issue-evidence {
+  margin: 8px 0 0 0;
+  color: #6c757d;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.actions-list {
+  margin: 0;
+  padding-left: 20px;
+
+  li {
+    margin-bottom: 12px;
+    line-height: 1.5;
+    color: #34495e;
+    font-weight: 500;
+  }
+}
+
+.appeal-container {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.appeal-text {
+  margin: 0 0 16px 0;
+  white-space: pre-wrap;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  color: #2c3e50;
+}
+
+// STICKY FOOTER - Fixed at bottom
+.popup-actions {
+  padding: 24px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  border-top: 1px solid #e9ecef;
+
+  // FIX: Make footer sticky
+  flex-shrink: 0; // Prevent shrinking
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.secondary-btn {
+  background: #ffffff;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-1px);
+  }
+}
+
+.feedback-section {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.rating-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.rating-btn {
+  background: none;
+  border: 1px solid #dee2e6;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #e9ecef;
+  }
+
+  &.selected {
+    background: #ffc107;
+    border-color: #ffc107;
+    color: white;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .popup-modal {
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  .popup-header,
+  .content-section,
+  .popup-actions {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .popup-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    .feedback-section {
+      margin-left: 0;
+      justify-content: center;
+    }
+  }
+
+  .issue-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
