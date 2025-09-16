@@ -34,6 +34,9 @@ export class AnalysisPopupComponent implements OnInit {
 
   ngOnInit() {
     // Component initialization
+    this.apiService.getTripAnalysisDetails('T1003').subscribe((data) => {
+      console.log('asazad', data);
+    });
   }
 
   onClose() {

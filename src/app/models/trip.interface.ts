@@ -54,3 +54,41 @@ export interface ERAParseResponse {
   groups: string[];
   count: Record<string, number>;
 }
+
+export interface TripAnalysisSummary {
+  trip_id: string;
+  risk_level: 'low' | 'medium' | 'high';
+  model: string;
+  last_updated: string;
+  summary_points: string[];
+  primary_issues: number;
+  action_count: number;
+  full_analysis_available: boolean;
+}
+
+export interface TripAnalysisDetails {
+  trip_id: string;
+  payer: string;
+  claim_id: string;
+  denial_codes: string[];
+  analysis: {
+    summary: string[];
+    issues: Array<{
+      code: string;
+      title: string;
+      detail: string;
+      evidence: string;
+    }>;
+    actions: string[];
+    risk: string;
+  };
+  model: string;
+  risk_level: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ApiError {
+  status: number;
+  message: string;
+}
