@@ -1,0 +1,401 @@
+<div class="app-container">
+  <mat-toolbar color="primary" class="main-toolbar">
+    <div class="toolbar-left">
+      <mat-icon class="toolbar-icon">healing</mat-icon>
+      <span class="toolbar-title">Medical Denial Analysis System</span>
+    </div>
+  </mat-toolbar>
+
+  <div class="content-container">
+    <mat-card class="main-card">
+      <mat-card-header class="enhanced-header">
+        <mat-card-subtitle class="card-subtitle"
+          >Upload files, paste text, or enter details manually for instant
+          analysis</mat-card-subtitle
+        >
+      </mat-card-header>
+
+      <mat-card-content *ngIf="isProcessing" class="processing-content">
+        <div class="processing-section">
+          <div class="processing-text">
+            <h3>Analyzing Denial Patterns...</h3>
+            <p>AI is processing your data and generating insights</p>
+          </div>
+          <div class="progress-container">
+            <mat-progress-bar
+              mode="indeterminate"
+              color="accent"
+            ></mat-progress-bar>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="!isProcessing" class="tabs-content">
+        <mat-tab-group
+          [(selectedIndex)]="selectedTab"
+          class="material-tabs"
+          animationDuration="400ms"
+          backgroundColor="accent"
+        >
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="d-flex align-items-center tab-label gap-2">
+                <mat-icon matIconPrefix>cloud_upload</mat-icon>
+                <span>Upload File</span>
+              </div>
+            </ng-template>
+
+            <div class="tab-panel">
+              <div class="upload-section">
+                <div
+                  class="drop-zone"
+                  [class.dragover]="isDragOver"
+                  [class.file-selected]="selectedFile"
+                  (dragover)="onDragOver($event)"
+                  (dragleave)="onDragLeave($event)"
+                  (drop)="onDrop($event)"
+                  (click)="fileInput.click()"
+                >
+                  <div class="drop-zone-icon">
+                    <mat-icon
+                      class="upload-icon"
+                      [class.success]="selectedFile"
+                    >
+                      {{ selectedFile ? "check_circle" : "cloud_upload" }}
+                    </mat-icon>
+                  </div>
+
+                  <div class="drop-zone-text">
+                    <h3 *ngIf="!selectedFile">
+                      Drop ERA file here or click to browse
+                    </h3>
+                    <h3 *ngIf="selectedFile" class="success-text">
+                      {{ selectedFile.name }}
+                    </h3>
+
+                    <p *ngIf="!selectedFile">
+                      Supports EDI, CSV, PDF, and TXT formats
+                    </p>
+                    <p *ngIf="selectedFile" class="file-size">
+                      {{ getFileSize(selectedFile.size) }}
+                    </p>
+                  </div>
+                  <input
+                    #fileInput
+                    type="file"
+                    (change)="onFileSelected($event)"
+                    accept=".edi,.csv,.pdf,.txt"
+                    style="display: none"
+                  />
+                </div>
+
+                <!-- File Actions -->
+                <div class="file-actions" *ngIf="selectedFile">
+                  <div class="payer-field-container">
+                    <mat-form-field appearance="outline" class="payer-field">
+                      <mat-label>Payer Name (Optional)</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="payerName"
+                        placeholder="Insurance Company"
+                      />
+                      <mat-icon matSuffix class="field-icon">business</mat-icon>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="button-group">
+                    <button
+                      mat-stroked-button
+                      (click)="clearFile()"
+                      color="warn"
+                      class="action-button"
+                    >
+                      <mat-icon class="button-icon">clear</mat-icon>
+                      <span class="button-text">Clear</span>
+                    </button>
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="uploadFile()"
+                      class="action-button primary"
+                    >
+                      <mat-icon class="button-icon">analytics</mat-icon>
+                      <span class="button-text">Analyze File</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="d-flex align-items-center tab-label gap-2">
+                <mat-icon class="tab-icon">content_paste</mat-icon>
+                <span class="tab-text">Paste EOB</span>
+              </div>
+            </ng-template>
+
+            <div class="tab-panel">
+              <div class="paste-section">
+                <div class="textarea-container">
+                  <mat-form-field appearance="outline" class="eob-textarea">
+                    <mat-label>EOB Text Content</mat-label>
+                    <textarea
+                      matInput
+                      [(ngModel)]="eobText"
+                      rows="8"
+                      placeholder="Paste your EOB text containing denial codes here..."
+                    ></textarea>
+                    <mat-hint class="field-hint">
+                      <mat-icon class="hint-icon">info</mat-icon>
+                      <span class="hint-text"
+                        >Include CARC codes (CO-50, PR-204) and RARC codes
+                        (N115, M15)</span
+                      >
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <div class="metadata-row">
+                  <mat-form-field appearance="outline" class="metadata-field">
+                    <mat-label>Claim ID</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="claimId"
+                      placeholder="CLM-2025-001"
+                    />
+                    <mat-icon matSuffix class="field-icon">assignment</mat-icon>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="metadata-field">
+                    <mat-label>Payer</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="payerName"
+                      placeholder="Insurance Name"
+                    />
+                    <mat-icon matSuffix class="field-icon">business</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div class="action-row">
+                  <button
+                    mat-stroked-button
+                    (click)="clearPasteForm()"
+                    class="action-button"
+                  >
+                    <mat-icon class="button-icon">clear</mat-icon>
+                    <span class="button-text">Clear</span>
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    [disabled]="!eobText.trim()"
+                    (click)="analyzePastedEob()"
+                    class="action-button primary"
+                  >
+                    <mat-icon class="button-icon">auto_awesome</mat-icon>
+                    <span class="button-text">Analyze EOB</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="d-flex align-items-center tab-label gap-2">
+                <mat-icon class="tab-icon">edit</mat-icon>
+                <span class="tab-text">Manual Entry</span>
+              </div>
+            </ng-template>
+
+            <div class="tab-panel">
+              <div class="manual-section">
+                <mat-expansion-panel class="info-panel" expanded>
+                  <mat-expansion-panel-header class="panel-header">
+                    <mat-panel-title class="panel-title">
+                      <mat-icon class="panel-icon">assignment</mat-icon>
+                      <span class="panel-text">Claim Information</span>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="panel-content">
+                    <div class="form-grid">
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Claim ID</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="manualData.claim_id"
+                          required
+                        />
+                        <mat-icon matSuffix class="field-icon"
+                          >assignment</mat-icon
+                        >
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Payer</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="manualData.payer"
+                          required
+                        />
+                        <mat-icon matSuffix class="field-icon"
+                          >business</mat-icon
+                        >
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Patient Name</mat-label>
+                        <input matInput [(ngModel)]="manualData.patient_name" />
+                        <mat-icon matSuffix class="field-icon">person</mat-icon>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Date of Service</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="manualData.dos"
+                          placeholder="MM/DD/YYYY"
+                        />
+                        <mat-icon matSuffix class="field-icon">event</mat-icon>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Billed Amount</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          [(ngModel)]="manualData.billed_amount"
+                        />
+                        <mat-icon matPrefix class="field-icon"
+                          >attach_money</mat-icon
+                        >
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="codes-panel" expanded>
+                  <mat-expansion-panel-header class="panel-header">
+                    <mat-panel-title class="panel-title">
+                      <mat-icon class="panel-icon">error_outline</mat-icon>
+                      <span class="panel-text">Denial Codes</span>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="panel-content">
+                    <div class="codes-input-container">
+                      <mat-form-field appearance="outline" class="codes-input">
+                        <mat-label>Denial Codes</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="denialCodesInput"
+                          placeholder="CO-50, PR-204, CO-97"
+                        />
+                        <mat-icon matSuffix class="field-icon">code</mat-icon>
+                        <mat-hint>Enter codes separated by commas</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div class="quick-codes">
+                      <span class="codes-label">Quick add:</span>
+                      <mat-chip-set class="code-chip-set">
+                        <mat-chip (click)="addCode('CO-50')" class="code-chip"
+                          >CO-50</mat-chip
+                        >
+                        <mat-chip (click)="addCode('PR-204')" class="code-chip"
+                          >PR-204</mat-chip
+                        >
+                        <mat-chip (click)="addCode('CO-97')" class="code-chip"
+                          >CO-97</mat-chip
+                        >
+                        <mat-chip (click)="addCode('CO-4')" class="code-chip"
+                          >CO-4</mat-chip
+                        >
+                      </mat-chip-set>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+                <div class="manual-actions">
+                  <button
+                    mat-stroked-button
+                    (click)="clearManualForm()"
+                    class="action-button"
+                  >
+                    <mat-icon class="button-icon">refresh</mat-icon>
+                    <span class="button-text">Reset</span>
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    [disabled]="!isManualFormValid()"
+                    (click)="analyzeManualEntry()"
+                    class="action-button primary"
+                  >
+                    <mat-icon class="button-icon">psychology</mat-icon>
+                    <span class="button-text">Generate Analysis</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="results-card" *ngIf="lastAnalysis && !isProcessing">
+      <mat-card-header class="results-header">
+        <div
+          mat-card-avatar
+          class="results-avatar d-flex align-items-center justify-content-center"
+        >
+          <mat-icon class="results-avatar-icon">check_circle</mat-icon>
+        </div>
+        <mat-card-title class="results-title">Analysis Complete</mat-card-title>
+        <mat-card-subtitle class="results-subtitle"
+          >{{ lastAnalysis.claim_id }} •
+          {{ getTimeAgo(lastAnalysis.timestamp) }}</mat-card-subtitle
+        >
+      </mat-card-header>
+
+      <mat-card-content class="results-content">
+        <div class="result-summary">
+          <mat-chip-set class="result-chips">
+            <mat-chip class="code-result">
+              <mat-icon matChipAvatar class="chip-icon">code</mat-icon>
+              <span class="chip-text"
+                >{{ lastAnalysis.codes_analyzed.length }} codes</span
+              >
+            </mat-chip>
+            <mat-chip class="appeal-result" [class]="getAppealClass()">
+              <mat-icon matChipAvatar class="chip-icon">gavel</mat-icon>
+              <span class="chip-text"
+                >{{
+                  lastAnalysis.analysis.appeal_potential | titlecase
+                }}
+                appeal</span
+              >
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="results-actions">
+        <button
+          mat-button
+          (click)="showAnalysisPopup(lastAnalysis)"
+          class="results-button"
+        >
+          <mat-icon class="button-icon">visibility</mat-icon>
+          <span class="button-text">View Details</span>
+        </button>
+        <button
+          mat-stroked-button
+          (click)="copyLastResults()"
+          class="results-button"
+        >
+          <mat-icon class="button-icon">content_copy</mat-icon>
+          <span class="button-text">Copy</span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
