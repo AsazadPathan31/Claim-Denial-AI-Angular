@@ -9,12 +9,13 @@ import {
   CommonDenialReason,
   SupportedFormat,
 } from '../models/denials.models';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DenialAnalysisService {
-  private readonly API_BASE_URL = 'http://localhost:8000'; // Update for production
+  private readonly API_BASE_URL = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
