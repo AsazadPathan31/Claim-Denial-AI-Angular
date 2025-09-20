@@ -1,12 +1,4 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  signal,
-  inject,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnalysisResult } from '../../models/trip.interface';
@@ -19,25 +11,17 @@ import { TripApiService } from '../../services/trip-api.service';
   templateUrl: './analysis-popup.component.html',
   styleUrls: ['./analysis-popup.component.scss'],
 })
-export class AnalysisPopupComponent implements OnInit {
+export class AnalysisPopupComponent {
   @Input() analysis: AnalysisResult | null = null;
   @Input() tripId: string | null = null;
   @Output() close = new EventEmitter<void>();
   @Output() reanalyze = new EventEmitter<boolean>();
   @Output() draftAppeal = new EventEmitter<void>();
-
-  private apiService = inject(TripApiService);
-
   appealText = signal<string>('');
   isLoadingAppeal = signal(false);
   feedbackRating = 0;
 
-  ngOnInit() {
-    // Component initialization
-    this.apiService.getTripAnalysisDetails('T1003').subscribe((data) => {
-      console.log('asazad', data);
-    });
-  }
+  constructor(private readonly apiService: TripApiService) {}
 
   onClose() {
     this.close.emit();

@@ -1,6 +1,5 @@
 <div class="popup-overlay" (click)="onClose()">
   <div class="popup-modal" (click)="$event.stopPropagation()">
-    <!-- STICKY HEADER -->
     <div class="popup-header">
       <h2>Trip Analysis Results</h2>
       <button class="close-btn" (click)="onClose()" aria-label="Close">
@@ -8,7 +7,6 @@
       </button>
     </div>
 
-    <!-- Risk Indicator (stays with header) -->
     <div
       class="risk-indicator"
       [ngClass]="getRiskClass()"
@@ -16,10 +14,7 @@
     >
       <strong>Risk Level: {{ analysis?.risk | titlecase }}</strong>
     </div>
-
-    <!-- SCROLLABLE CONTENT AREA -->
     <div class="popup-content">
-      <!-- Summary Section -->
       <div class="content-section" *ngIf="analysis?.summary?.length">
         <h3>Summary</h3>
         <ul class="summary-list">
@@ -27,7 +22,6 @@
         </ul>
       </div>
 
-      <!-- Issues Section -->
       <div class="content-section" *ngIf="analysis?.issues?.length">
         <h3>Identified Issues</h3>
         <div class="issues-container">
@@ -46,7 +40,6 @@
         </div>
       </div>
 
-      <!-- Actions Section -->
       <div class="content-section" *ngIf="analysis?.actions?.length">
         <h3>Recommended Next Steps</h3>
         <ol class="actions-list">
@@ -54,7 +47,6 @@
         </ol>
       </div>
 
-      <!-- Appeal Draft Section -->
       <div class="content-section" *ngIf="appealText()">
         <h3>Draft Appeal/Checklist</h3>
         <div class="appeal-container">
@@ -66,7 +58,6 @@
       </div>
     </div>
 
-    <!-- STICKY FOOTER -->
     <div class="popup-actions">
       <button
         class="primary-btn"

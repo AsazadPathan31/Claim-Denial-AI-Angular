@@ -17,9 +17,8 @@ import {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  private apiService = inject(TripApiService);
+  constructor(private readonly apiService: TripApiService) {}
 
-  // Signals for reactive state management
   apiStatus = signal<{ status: string; models: string[] } | null>(null);
   isLoading = signal(false);
   showAnalysisPopup = signal(false);
@@ -30,7 +29,6 @@ export class AppComponent implements OnInit {
     rarc: [],
   });
 
-  // Form data
   tripForm: Trip = {
     trip_id: '',
     payer: '',
@@ -43,8 +41,6 @@ export class AppComponent implements OnInit {
     cpt_hcpcs: [],
     icd10: [],
   };
-
-  // String representations for form inputs
   denialCodesInput = '';
   cptCodesInput = '';
   icdCodesInput = '';
@@ -85,10 +81,8 @@ export class AppComponent implements OnInit {
     this.updateTripFormArrays();
     this.isLoading.set(true);
 
-    // First ingest the trip
     this.apiService.ingestTrip(this.tripForm).subscribe({
       next: () => {
-        // Then analyze it
         const analyzeRequest = {
           trip: this.tripForm,
           deep_reasoning: false,
@@ -133,14 +127,10 @@ export class AppComponent implements OnInit {
           carc: response.carc,
           rarc: response.rarc,
         });
-
-        // Auto-populate denial codes if not already set
         if (!this.denialCodesInput.trim()) {
           const allCodes = [...response.carc, ...response.rarc];
           this.denialCodesInput = allCodes.join(', ');
         }
-
-        // Auto-populate EOB text in trip form
         this.tripForm.eob_text = this.eobText;
 
         this.isLoading.set(false);

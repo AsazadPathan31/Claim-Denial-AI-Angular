@@ -1,5 +1,4 @@
 <div class="app-container">
-  <!-- Header -->
   <header class="app-header">
     <div class="header-content">
       <h1>🏥 Denied Trip Analysis Assistant</h1>
@@ -19,10 +18,8 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="main-content">
     <div class="content-grid">
-      <!-- Trip Input Section -->
       <section class="input-section">
         <div class="section-header">
           <h2>📋 Trip Information</h2>
@@ -173,7 +170,6 @@
         </form>
       </section>
 
-      <!-- EOB Parser Section -->
       <section class="parser-section">
         <div class="section-header">
           <h2>📄 EOB/ERA Parser</h2>
@@ -207,8 +203,6 @@
               </span>
             </button>
           </div>
-
-          <!-- Extracted Codes Display -->
           <div
             class="extracted-codes"
             *ngIf="
@@ -235,7 +229,6 @@
         </div>
       </section>
 
-      <!-- Current Trip Status -->
       <section class="status-section" *ngIf="currentTripId()">
         <div class="section-header">
           <h2>🎯 Current Trip Analysis</h2>
@@ -270,7 +263,6 @@
     </div>
   </main>
 
-  <!-- Analysis Popup -->
   <app-analysis-popup
     *ngIf="showAnalysisPopup()"
     [analysis]="currentAnalysis()"
@@ -280,7 +272,6 @@
   >
   </app-analysis-popup>
 
-  <!-- Loading Overlay -->
   <div class="loading-overlay" *ngIf="isLoading()">
     <div class="loading-content">
       <div class="spinner large"></div>

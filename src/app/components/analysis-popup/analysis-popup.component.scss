@@ -20,8 +20,6 @@
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideIn 0.3s ease-out;
-
-  // KEY FIX: Use flexbox layout for sticky header/footer
   display: flex;
   flex-direction: column;
 }
@@ -37,7 +35,6 @@
   }
 }
 
-// STICKY HEADER - Fixed at top
 .popup-header {
   display: flex;
   align-items: center;
@@ -47,9 +44,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 12px 12px 0 0;
-
-  // FIX: Make header sticky
-  flex-shrink: 0; // Prevent shrinking
+  flex-shrink: 0;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -61,7 +56,6 @@
   }
 }
 
-// FIX: Close button positioning
 .close-btn {
   background: none;
   border: none;
@@ -76,8 +70,8 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
-  position: relative; // Remove any sticky positioning
-  z-index: 11; // Ensure it's above header
+  position: relative;
+  z-index: 11;
 
   &:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -90,7 +84,7 @@
   text-align: center;
   font-size: 16px;
   font-weight: 600;
-  flex-shrink: 0; // Prevent shrinking
+  flex-shrink: 0;
 
   &.risk-low {
     background: #d4edda;
@@ -111,12 +105,11 @@
   }
 }
 
-// SCROLLABLE CONTENT AREA - This is the key fix
 .popup-content {
-  flex: 1; // Take up remaining space
-  overflow-y: auto; // Allow scrolling
+  flex: 1;
+  overflow-y: auto;
   overflow-x: hidden;
-  padding: 0; // Remove padding, let individual sections handle it
+  padding: 0;
 }
 
 .content-section {
@@ -125,7 +118,7 @@
 
   &:last-child {
     border-bottom: none;
-    padding-bottom: 32px; // Extra space before footer
+    padding-bottom: 32px;
   }
 
   h3 {
@@ -229,7 +222,6 @@
   color: #2c3e50;
 }
 
-// STICKY FOOTER - Fixed at bottom
 .popup-actions {
   padding: 24px 28px;
   display: flex;
