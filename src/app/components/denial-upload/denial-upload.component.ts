@@ -113,6 +113,7 @@ export class DenialUploadComponent implements OnInit {
             const firstDenial = response.extracted_denials[0];
             this.analyzeExtractedDenial(firstDenial);
           } else {
+            this.isProcessing = false;
             this.snackBar.open(
               `File processed. ${response.processing_notes.join(', ')}`,
               'Close',

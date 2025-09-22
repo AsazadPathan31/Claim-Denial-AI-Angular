@@ -67,14 +67,14 @@
 
                   <div class="drop-zone-text">
                     <h3 *ngIf="!selectedFile">
-                      Drop ERA file here or click to browse
+                      Drop file here or click to browse
                     </h3>
                     <h3 *ngIf="selectedFile" class="success-text">
                       {{ selectedFile.name }}
                     </h3>
 
                     <p *ngIf="!selectedFile">
-                      Supports EDI, CSV, PDF, and TXT formats
+                      Supports CSV, PDF, and TXT formats
                     </p>
                     <p *ngIf="selectedFile" class="file-size">
                       {{ getFileSize(selectedFile.size) }}

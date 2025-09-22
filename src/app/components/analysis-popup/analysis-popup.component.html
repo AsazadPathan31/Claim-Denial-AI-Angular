@@ -17,7 +17,7 @@
     <div class="summary-section">
       <div class="codes-summary">
         <mat-icon>code</mat-icon>
-        <span>{{ data.codes_analyzed.length }} denial code(s) analyzed</span>
+        <span>{{ data.codes_analyzed?.length }} denial code(s) analyzed</span>
         <div class="codes-list">
           <span class="code-badge" *ngFor="let code of data.codes_analyzed">{{
             code
