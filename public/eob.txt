@@ -1,0 +1,40 @@
+Patient: Jane Smith
+Member ID: 987654321
+Claim #: CLM-20250901-002
+Date of Service: 2025-09-01
+Provider: Downtown Medical Clinic
+CPT: 99215, 93000, 81002, 36415
+ICD-10: I25.10, E11.9, R07.9, Z00.00
+
+Line 1:
+CPT 99215 - Office visit, established patient
+Billed Amount: $200.00
+Allowed Amount: $0.00
+Denial: CO-50, N115
+Reason: Service not medically necessary per payer LCD; insufficient documentation.
+
+Line 2:
+CPT 93000 - EKG
+Billed Amount: $100.00
+Allowed Amount: $0.00
+Denial: CO-97
+Reason: Bundled service; cannot be billed separately.
+
+Line 3:
+CPT 81002 - Urinalysis
+Billed Amount: $30.00
+Allowed Amount: $0.00
+Denial: CO-11, N290
+Reason: Diagnosis inconsistent with procedure; incomplete submission of lab info.
+
+Line 4:
+CPT 36415 - Venipuncture
+Billed Amount: $25.00
+Allowed Amount: $0.00
+Denial: PR-204
+Reason: Patient responsibility; plan does not cover.
+
+Additional Notes:
+- Authorization missing for high-level office visit.
+- Patient contacted for appeal process.
+- Multiple denial codes suggest high risk for delayed reimbursement.
